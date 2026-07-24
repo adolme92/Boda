@@ -1,127 +1,325 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/*
+  Invitación Adrián & Andrea
+  La tarjeta está por debajo de la parte frontal del sobre cuando está cerrado.
+  Esto evita que se vea el texto antes de abrirlo.
+*/
+
+:root {
+  --ink: #423a32;
+  --muted: #7f756b;
+  --paper: #fffdf8;
+  --background: #f6f0e7;
+  --envelope: #e8d8c2;
+  --envelope-light: #f0e4d3;
+  --envelope-shadow: #d6bea1;
+  --gold: #b28a59;
+  --seal: #965545;
 }
 
-body{
+* { box-sizing: border-box; }
 
-    background:#f8f5ef;
+html { min-height: 100%; }
 
-    height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-family:'Montserrat',sans-serif;
-
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--ink);
+  font-family: "Montserrat", sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, .85), transparent 38rem),
+    linear-gradient(135deg, #f9f5ef, var(--background));
 }
 
-.container{
-
-    text-align:center;
-
+/* Luz ambiental para que la composición no parezca plana. */
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: radial-gradient(ellipse at 50% 115%, rgba(151, 112, 72, .15), transparent 48%);
 }
 
-h1{
-
-    font-family:'Cormorant Garamond',serif;
-
-    font-size:60px;
-
-    margin-bottom:20px;
-
+.scene {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2.25rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  perspective: 1500px;
 }
 
-p{
-
-    margin-bottom:40px;
-
-    color:#777;
-
+.intro {
+  transform-style: preserve-3d;
+  transition: opacity .35s ease, transform .35s ease;
 }
 
-.envelope{
-
-    position:relative;
-
-    width:320px;
-
-    height:220px;
-
-    background:#e6d7bf;
-
-    margin:auto;
-
-    cursor:pointer;
-
-    overflow:hidden;
-
-    border-radius:6px;
-
+.eyebrow,
+.instruction,
+.card-kicker,
+.card-date {
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
-.flap{
-
-    position:absolute;
-
-    width:100%;
-
-    height:110px;
-
-    background:#d9c8aa;
-
-    clip-path:polygon(0 0,100% 0,50% 100%);
-
-    transform-origin:top;
-
-    transition:.8s;
-
-    z-index:5;
-
+.eyebrow {
+  margin: 0 0 .7rem;
+  color: var(--gold);
+  font-size: .68rem;
+  font-weight: 600;
 }
 
-.letter{
-
-    position:absolute;
-
-    width:90%;
-
-    height:180px;
-
-    background:white;
-
-    left:5%;
-
-    top:35px;
-
-    border-radius:4px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    transition:1s;
-
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
-
+h1, h2 {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
 }
 
-.open .flap{
-
-    transform:rotateX(180deg);
-
+h1 {
+  font-size: clamp(3rem, 8vw, 5.6rem);
+  line-height: .9;
+  transform: translateZ(24px);
+  text-shadow: 0 1px 0 rgba(255,255,255,.9), 0 3px 3px rgba(78, 55, 33, .15);
 }
 
-.open .letter{
+/* Una & más limpia que la variante muy caligráfica de Cormorant. */
+h1 span, h2 span {
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: .78em;
+  font-style: italic;
+  font-weight: 500;
+}
 
-    transform:translateY(-120px);
+.instruction {
+  min-height: 1.2em;
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: .69rem;
+  font-weight: 500;
+  transform: translateZ(16px);
+  text-shadow: 0 1px 0 rgba(255,255,255,.8), 0 2px 3px rgba(78, 55, 33, .1);
+}
 
+/* ---------- Sobre ---------- */
+
+.envelope {
+  --width: min(82vw, 480px);
+  position: relative;
+  display: block;
+  width: var(--width);
+  height: calc(var(--width) * .63);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0 0 12px 12px;
+  /* Cerrado, recorta la tarjeta para que no asome por debajo. */
+  overflow: hidden;
+  cursor: pointer;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+  background: transparent;
+  filter: drop-shadow(0 22px 17px rgba(91, 67, 43, .19));
+  transform: rotateX(3deg) rotateY(-2deg);
+  transition: transform .75s cubic-bezier(.2, .8, .2, 1), filter .45s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.envelope:focus-visible { outline: 3px solid var(--gold); outline-offset: 10px; }
+
+.envelope-back,
+.envelope-front,
+.envelope-flap {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.envelope-back {
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 8px 8px 12px 12px;
+  background: linear-gradient(145deg, #f3e7d7, var(--envelope));
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.72), inset 0 -9px 18px rgba(137, 96, 56, .08);
+  transform: translateZ(-2px);
+}
+
+/* Tarjeta: se oculta detrás de los pliegues frontales. */
+.invitation-card {
+  position: absolute;
+  z-index: 2;
+  left: 7%;
+  bottom: 6%;
+  display: grid;
+  place-items: center;
+  width: 86%;
+  height: 87%;
+  padding: 1.4rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(178, 138, 89, .36);
+  border-radius: 3px;
+  background: var(--paper);
+  box-shadow: 0 8px 15px rgba(83, 59, 36, .16), inset 0 1px 0 rgba(255,255,255,.9);
+  /* La parte restante queda dentro del sobre hasta el primer clic. */
+  transform: translateY(40%) translateZ(10px);
+  transition: transform 1.05s cubic-bezier(.2, .8, .2, 1), box-shadow 1s ease;
+}
+
+.invitation-card::before,
+.invitation-card::after {
+  position: absolute;
+  width: 115px;
+  height: 115px;
+  border: 1px solid rgba(178, 138, 89, .15);
+  border-radius: 50%;
+  content: "";
+}
+
+.invitation-card::before { top: -85px; left: -77px; }
+.invitation-card::after { right: -77px; bottom: -85px; }
+
+.card-kicker { margin: 0; color: var(--gold); font-family: "Montserrat", sans-serif; font-size: .53rem; font-weight: 600; text-shadow: 0 1px 0 rgba(255,255,255,.9), 0 1px 2px rgba(105, 76, 43, .14); }
+.invitation-card h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: .9; text-shadow: 0 1px 0 white, 0 2px 2px rgba(74, 48, 26, .16); }
+.card-rule { width: 42px; height: 1px; background: var(--gold); }
+.card-date { margin: 0; font-family: "Montserrat", sans-serif; font-size: .54rem; color: var(--ink); font-weight: 600; text-shadow: 0 1px 0 white, 0 1px 2px rgba(74, 48, 26, .12); }
+.card-note { margin: 0; color: var(--muted); font-family: "Cormorant Garamond", Georgia, serif; font-size: .9rem; line-height: 1.1; text-shadow: 0 1px 0 white, 0 1px 2px rgba(74, 48, 26, .12); }
+
+/*
+  La parte frontal es una pieza completa: los dos pliegues son decorativos.
+  Así la tarjeta aparece rectangular al salir, sin el triángulo blanco central.
+*/
+.envelope-front {
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(145deg, #eddfcc, var(--envelope));
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.55), inset 0 -8px 15px rgba(128, 88, 51, .08);
+  transform: translateZ(3px);
+}
+
+.envelope-front::before,
+.envelope-front::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.envelope-front::before {
+  background: linear-gradient(145deg, #f8edde 0%, #ead6bd 54%, #d6b993 100%);
+  clip-path: polygon(0 0, 50% 57%, 0 100%);
+}
+
+.envelope-front::after {
+  background: linear-gradient(215deg, #f6e8d7 0%, #e8cfb0 54%, #d2b38d 100%);
+  clip-path: polygon(100% 0, 50% 57%, 100% 100%);
+}
+
+.envelope-flap {
+  z-index: 5;
+  height: 58%;
+  transform-origin: top center;
+  transform: translateZ(5px) rotateX(0deg);
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(135deg, #f1e2d0, #e1cab0);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.5), 0 5px 7px rgba(123, 82, 44, .08);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transition: transform .75s cubic-bezier(.2, .8, .2, 1), z-index 0s linear .75s;
+  backface-visibility: hidden;
+}
+
+.wax-seal {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 12vw, 64px);
+  aspect-ratio: 1;
+  border: 3px solid rgba(255, 231, 202, .32);
+  border-radius: 49% 51% 47% 53% / 52% 44% 56% 48%;
+  color: #ffe8cb;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.1rem, 3vw, 1.45rem);
+  font-weight: 600;
+  line-height: .64;
+  text-shadow: 0 1px 0 rgba(79, 30, 25, .4);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 205, 178, .42) 0 3%, transparent 17%), radial-gradient(circle at 68% 77%, rgba(86, 31, 27, .25) 0 4%, transparent 20%), radial-gradient(circle at 35% 24%, #ca806e, var(--seal) 57%, #74362f);
+  box-shadow: 0 8px 10px rgba(73, 39, 30, .24), 0 2px 0 rgba(255, 211, 186, .32) inset, 0 -3px 4px rgba(78, 28, 24, .28);
+  transform: translate(-50%, -5%) translateZ(12px);
+  transition: opacity .25s ease, transform .45s cubic-bezier(.2, .8, .2, 1);
+}
+
+.wax-seal::before { position: absolute; inset: 6px; border: 1px dashed rgba(255, 229, 201, .38); border-radius: inherit; content: ""; }
+.wax-seal span { position: relative; z-index: 1; display: block; font-family: Georgia, serif; font-size: .8em; font-style: italic; line-height: .56; }
+
+/* ---------- Estado abierto ---------- */
+
+.envelope.is-open { cursor: default; overflow: visible; }
+.envelope.is-open .wax-seal { opacity: 0; transform: translate(-50%, -5%) translateZ(12px) scale(.4) rotate(25deg); pointer-events: none; }
+.envelope.is-open .envelope-flap { z-index: 1; transform: translateZ(5px) rotateX(180deg); }
+.envelope.is-open .invitation-card {
+  /* Sale completa y algo más pequeña para que se vea entera en la pantalla. */
+  transform: translateY(-108%) translateZ(10px) scale(.78);
+  transform-origin: bottom center;
+  box-shadow: 0 20px 28px rgba(83, 59, 36, .2);
+}
+
+/* Al abrir, los nombres de portada dejan espacio a la invitación. */
+.scene.is-opening .intro {
+  opacity: 0;
+  transform: translateY(-18px);
+  pointer-events: none;
+}
+
+.scene.is-opening .envelope {
+  /* Compensa la altura de la tarjeta para que no se corte por arriba. */
+  transform: translateY(clamp(2rem, 5vh, 3.5rem)) rotateX(1deg) rotateY(0deg);
+}
+
+.continue-button {
+  padding: .9rem 1.35rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--ink);
+  font: 600 .66rem/1 "Montserrat", sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: rgba(255, 253, 248, .7);
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.continue-button:hover { color: white; background: var(--gold); transform: translateY(-2px); }
+.continue-button:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+
+/* Al pulsar el botón final se puede volver a cerrar para repetir la animación. */
+.scene.show-card .intro { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+.scene.show-card { gap: .4rem; }
+.scene.show-card .envelope { transform: translateY(clamp(2rem, 5vh, 3.5rem)) rotateX(1deg) scale(1.02); }
+
+@media (hover: hover) {
+  .envelope:hover {
+    filter: drop-shadow(0 30px 22px rgba(91, 67, 43, .25));
+    transform: translateY(-7px) rotateX(5deg) rotateY(-4deg);
+  }
+
+  .scene.is-opening .envelope:hover {
+    transform: translateY(calc(clamp(2rem, 5vh, 3.5rem) - 4px)) rotateX(2deg) rotateY(-1deg);
+  }
+}
+
+@media (max-width: 520px) {
+  .scene { gap: 1.8rem; padding: 2.4rem 1rem; }
+  .instruction { margin-top: 1rem; }
+  .invitation-card { padding: 1rem .6rem; }
+  .card-note { font-size: .75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
