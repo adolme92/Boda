@@ -260,11 +260,26 @@ h1 span, h2 span {
 /* ---------- Estado abierto ---------- */
 
 .envelope.is-open { cursor: default; overflow: visible; }
-.envelope.is-open .wax-seal { opacity: 0; transform: translate(-50%, -5%) translateZ(12px) scale(.4) rotate(25deg); pointer-events: none; }
-.envelope.is-open .envelope-flap { z-index: 1; transform: translateZ(5px) rotateX(180deg); }
+.envelope.is-open .wax-seal {
+  /* El lacre sigue presente: parece roto/desplazado, no desaparecido. */
+  opacity: .88;
+  transform: translate(-50%, -5%) translateZ(12px) scale(.78) rotate(-12deg);
+  pointer-events: none;
+}
+
+/* La solapa se retira con discrecion para no competir con la carta. */
+.envelope.is-open .envelope-flap {
+  z-index: 1;
+  height: 60%;
+  opacity: .72;
+  /* Solapa doblada hacia atras, visible a ambos lados de la carta. */
+  clip-path: polygon(0 100%, 100% 100%, 50% 0);
+  transform: translateY(-48%) translateZ(-2px);
+  box-shadow: inset 0 -2px 1px rgba(255,255,255,.5), 0 -5px 9px rgba(123, 82, 44, .12);
+}
 .envelope.is-open .invitation-card {
-  /* Sale completa y algo más pequeña para que se vea entera en la pantalla. */
-  transform: translateY(-108%) translateZ(10px) scale(.78);
+  /* Solo asoma: la parte inferior continua dentro del sobre. */
+  transform: translateY(-74%) translateZ(10px) scale(.88);
   transform-origin: bottom center;
   box-shadow: 0 20px 28px rgba(83, 59, 36, .2);
 }
@@ -277,8 +292,7 @@ h1 span, h2 span {
 }
 
 .scene.is-opening .envelope {
-  /* Compensa la altura de la tarjeta para que no se corte por arriba. */
-  transform: translateY(clamp(2rem, 5vh, 3.5rem)) rotateX(1deg) rotateY(0deg);
+  transform: translateY(clamp(.5rem, 2vh, 1.25rem)) rotateX(1deg) rotateY(0deg);
 }
 
 .continue-button {
@@ -300,7 +314,7 @@ h1 span, h2 span {
 /* Al pulsar el botón final se puede volver a cerrar para repetir la animación. */
 .scene.show-card .intro { opacity: 0; transform: translateY(-12px); pointer-events: none; }
 .scene.show-card { gap: .4rem; }
-.scene.show-card .envelope { transform: translateY(clamp(2rem, 5vh, 3.5rem)) rotateX(1deg) scale(1.02); }
+.scene.show-card .envelope { transform: translateY(clamp(.5rem, 2vh, 1.25rem)) rotateX(1deg) scale(1.02); }
 
 @media (hover: hover) {
   .envelope:hover {
@@ -309,7 +323,7 @@ h1 span, h2 span {
   }
 
   .scene.is-opening .envelope:hover {
-    transform: translateY(calc(clamp(2rem, 5vh, 3.5rem) - 4px)) rotateX(2deg) rotateY(-1deg);
+    transform: translateY(calc(clamp(.5rem, 2vh, 1.25rem) - 4px)) rotateX(2deg) rotateY(-1deg);
   }
 }
 
@@ -322,4 +336,291 @@ h1 span, h2 span {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* ---------- Invitación completa ---------- */
+
+.details {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 2rem;
+  color: var(--ink);
+  text-align: center;
+  animation: details-in .7s ease both;
+}
+
+.details[hidden] { display: none; }
+
+.details-heading,
+.countdown-section,
+.event-section,
+.locations-section,
+.stay-section,
+.rsvp-section {
+  margin: 0 auto;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+}
+
+.section-kicker {
+  margin: 0 0 .9rem;
+  color: var(--gold);
+  font: 600 .65rem/1 "Montserrat", sans-serif;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
+}
+
+.details h2 {
+  font: 500 clamp(2.35rem, 7vw, 4.3rem)/.92 "Cormorant Garamond", Georgia, serif;
+  text-shadow: 0 1px 0 white, 0 3px 5px rgba(78, 55, 33, .12);
+}
+
+.countdown-section {
+  border-top: 1px solid rgba(178, 138, 89, .35);
+  border-bottom: 1px solid rgba(178, 138, 89, .35);
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .75rem;
+  max-width: 720px;
+  margin: 2.1rem auto 0;
+}
+
+.countdown div {
+  padding: .5rem;
+  border-right: 1px solid rgba(178, 138, 89, .3);
+}
+
+.countdown div:last-child { border-right: 0; }
+.countdown strong { display: block; font: 500 clamp(2rem, 8vw, 4.4rem)/1 "Cormorant Garamond", Georgia, serif; text-shadow: 0 2px 3px rgba(78, 55, 33, .12); }
+.countdown span { display: block; margin-top: .4rem; color: var(--muted); font: 600 .58rem/1 "Montserrat", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+
+.timeline {
+  position: relative;
+  max-width: 660px;
+  margin: 2.6rem auto 0;
+  padding: 0;
+  text-align: left;
+  list-style: none;
+}
+
+.timeline::before {
+  position: absolute;
+  top: 1.45rem;
+  bottom: 1.45rem;
+  left: 5.25rem;
+  width: 1px;
+  background: rgba(178, 138, 89, .42);
+  content: "";
+}
+
+.timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  gap: 2rem;
+  padding: 0 0 2.4rem;
+}
+
+.timeline li:last-child { padding-bottom: 0; }
+.timeline time { position: relative; z-index: 1; color: var(--gold); font: 600 .78rem/1 "Montserrat", sans-serif; letter-spacing: .08em; padding-top: .36rem; }
+.timeline time::after { position: absolute; top: .3rem; right: -1.44rem; width: .68rem; height: .68rem; border: 3px solid var(--background); border-radius: 50%; background: var(--gold); box-shadow: 0 2px 3px rgba(78, 55, 33, .18); content: ""; }
+.timeline h3, .location-card h3 { margin: 0 0 .35rem; font: 500 clamp(1.6rem, 4vw, 2rem)/1 "Cormorant Garamond", Georgia, serif; }
+.timeline p, .location-card p, .stay-section > p, .rsvp-section > p { margin: 0; color: var(--muted); font: 400 1rem/1.55 "Cormorant Garamond", Georgia, serif; }
+
+.locations-section { max-width: 900px; }
+.location-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2.2rem; }
+.location-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 250px;
+  padding: 2rem;
+  border: 1px solid rgba(178, 138, 89, .35);
+  border-radius: 5px;
+  background: rgba(255,253,248,.72);
+  box-shadow: 0 12px 24px rgba(91, 67, 43, .09), inset 0 1px 0 white;
+  text-align: left;
+  transform: translateZ(8px);
+}
+
+.location-card::after { position: absolute; right: -2.5rem; bottom: -2.5rem; width: 9rem; height: 9rem; border: 1px solid rgba(178, 138, 89, .18); border-radius: 50%; content: ""; }
+.location-number { display: block; margin-bottom: 2.2rem; color: var(--gold); font: 600 .62rem/1 "Montserrat", sans-serif; letter-spacing: .15em; }
+.location-card .place { margin-bottom: .8rem; color: var(--ink); font-size: 1.25rem; }
+.location-card a { position: absolute; bottom: 2rem; color: var(--gold); font: 600 .62rem/1 "Montserrat", sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.location-card a span { padding-left: .25rem; font-size: 1rem; }
+
+.stay-section, .rsvp-section { max-width: 740px; }
+.stay-section { border-top: 1px solid rgba(178, 138, 89, .35); }
+.stay-section > p, .rsvp-section > p { max-width: 550px; margin: 1.4rem auto 0; font-size: 1.25rem; }
+
+.rsvp-section { border-top: 1px solid rgba(178, 138, 89, .35); }
+.rsvp-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 2rem; }
+.rsvp-actions a { padding: 1rem 1.35rem; border: 1px solid var(--gold); border-radius: 999px; color: var(--ink); font: 600 .69rem/1 "Montserrat", sans-serif; letter-spacing: .12em; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
+.rsvp-actions a:hover { color: white; background: var(--gold); transform: translateY(-2px); }
+
+.details-footer { padding: 2rem 0 1rem; color: var(--ink); font: 500 clamp(2.4rem, 7vw, 4rem)/1 "Cormorant Garamond", Georgia, serif; text-shadow: 0 1px 0 white, 0 3px 5px rgba(78, 55, 33, .12); }
+.details-footer span { color: var(--gold); font-family: Georgia, serif; font-size: .75em; font-style: italic; }
+
+@keyframes details-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) {
+  .details { padding-inline: 1.15rem; }
+  .countdown { gap: 0; }
+  .countdown strong { font-size: 2.25rem; }
+  .countdown span { font-size: .46rem; letter-spacing: .06em; }
+  .timeline::before { left: 4.35rem; }
+  .timeline li { grid-template-columns: 3.3rem 1fr; gap: 1.5rem; }
+  .timeline time::after { right: -1.2rem; }
+  .location-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Nuevo sobre: carpeta de doble puerta ---------- */
+
+.gatefold {
+  --gate-width: min(84vw, 520px);
+  position: relative;
+  width: var(--gate-width);
+  height: calc(var(--gate-width) * .66);
+  margin: 0;
+  perspective: 1400px;
+  transform: rotateX(2deg);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 25px 20px rgba(86, 57, 32, .2));
+  transition: transform .85s cubic-bezier(.2, .8, .2, 1), filter .45s ease;
+}
+
+.gatefold-back {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border: 1px solid rgba(208, 220, 228, .18);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #263f59, #0c1a2b);
+  box-shadow: inset 0 2px 1px rgba(255,255,255,.14), inset 0 -14px 20px rgba(0, 0, 0, .26);
+}
+
+.gate-card {
+  position: absolute;
+  z-index: 1;
+  inset: 6.5%;
+  display: grid;
+  place-items: center;
+  padding: 1.4rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(178, 138, 89, .36);
+  border-radius: 4px;
+  background: var(--paper);
+  box-shadow: 0 10px 16px rgba(77, 52, 29, .18), inset 0 1px 0 white;
+  transform: translateZ(4px) scale(.96);
+  transition: transform .9s cubic-bezier(.2, .8, .2, 1), box-shadow .9s ease;
+}
+
+.gate-card::before,
+.gate-card::after {
+  position: absolute;
+  width: 105px;
+  height: 105px;
+  border: 1px solid rgba(178, 138, 89, .16);
+  border-radius: 50%;
+  content: "";
+}
+
+.gate-card::before { top: -74px; left: -74px; }
+.gate-card::after { right: -74px; bottom: -74px; }
+.gate-card .card-kicker { margin: 0; color: var(--gold); font: 600 .53rem/1 "Montserrat", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.gate-card h2 { margin: 0; font: 500 clamp(2rem, 5.4vw, 3.05rem)/.9 "Cormorant Garamond", Georgia, serif; text-shadow: 0 1px 0 white, 0 2px 2px rgba(74, 48, 26, .14); }
+.gate-card .card-date { margin: 0; color: var(--ink); font: 600 .54rem/1 "Montserrat", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.gate-card .card-note { margin: 0; color: var(--muted); font: 400 1rem/1.1 "Cormorant Garamond", Georgia, serif; }
+
+.gate-door {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 50.4%;
+  overflow: hidden;
+  backface-visibility: hidden;
+  background: linear-gradient(145deg, #2d4a66, #10243a);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.16), inset 0 -12px 17px rgba(0, 0, 0, .24);
+  transition: transform .95s cubic-bezier(.2, .8, .2, 1), box-shadow .7s ease;
+}
+
+.gate-door::before {
+  position: absolute;
+  inset: 0;
+  opacity: .75;
+  content: "";
+}
+
+.gate-door span {
+  position: absolute;
+  top: -12%;
+  bottom: -12%;
+  width: 1px;
+  background: rgba(156, 119, 79, .3);
+  box-shadow: 0 0 1px rgba(255,255,255,.85);
+}
+
+.gate-door-left {
+  left: 0;
+  border-radius: 10px 0 0 10px;
+  transform-origin: left center;
+}
+
+.gate-door-left::before { background: linear-gradient(145deg, transparent 49.6%, rgba(192, 210, 221, .2) 50%, transparent 50.4%); }
+.gate-door-left span { right: 8%; transform: rotate(-40deg); }
+
+.gate-door-right {
+  right: 0;
+  border-radius: 0 10px 10px 0;
+  transform-origin: right center;
+}
+
+.gate-door-right::before { background: linear-gradient(-145deg, transparent 49.6%, rgba(192, 210, 221, .2) 50%, transparent 50.4%); }
+.gate-door-right span { left: 8%; transform: rotate(40deg); }
+
+.gate-seal {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: clamp(62px, 14vw, 76px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 51% 49% 47% 53% / 48% 55% 45% 52%;
+  color: #f9dcc1;
+  cursor: pointer;
+  font: 500 clamp(1.3rem, 3.6vw, 1.7rem)/.55 "Cormorant Garamond", Georgia, serif;
+  text-shadow: 0 1px 0 rgba(79, 30, 25, .4);
+  background: radial-gradient(circle at 30% 24%, rgba(255, 190, 168, .52) 0 2%, transparent 14%), radial-gradient(circle at 66% 74%, rgba(44, 8, 10, .34) 0 5%, transparent 20%), radial-gradient(circle at 35% 24%, #b64e4a, #762628 58%, #4a1519);
+  box-shadow: 0 8px 11px rgba(0, 0, 0, .34), 0 2px 1px rgba(255, 202, 178, .26) inset, 0 -4px 5px rgba(48, 9, 12, .42) inset;
+  transform: translate(-50%, -50%) translateZ(24px);
+  transition: opacity .35s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
+}
+
+.gate-seal::before { position: absolute; inset: 8px; border: 1px solid rgba(255, 220, 190, .42); border-radius: inherit; box-shadow: 0 1px 0 rgba(61, 11, 14, .55) inset; content: ""; }
+.gate-seal span, .gate-seal strong { position: relative; z-index: 1; display: block; font: inherit; }
+.gate-seal strong { font-family: Georgia, serif; font-size: .78em; font-style: italic; }
+.gate-seal:focus-visible { outline: 3px solid var(--gold); outline-offset: 8px; }
+
+.gatefold.is-open { transform: rotateX(0deg) scale(1.02); filter: drop-shadow(0 30px 24px rgba(86, 57, 32, .25)); }
+.gatefold.is-open .gate-door-left { transform: rotateY(-108deg); box-shadow: none; }
+.gatefold.is-open .gate-door-right { transform: rotateY(108deg); box-shadow: none; }
+.gatefold.is-open .gate-seal { opacity: 0; transform: translate(-50%, -50%) translateZ(24px) scale(.25) rotate(18deg); pointer-events: none; }
+.gatefold.is-open .gate-card { transform: translateZ(32px) scale(1.03); box-shadow: 0 22px 30px rgba(77, 52, 29, .23), inset 0 1px 0 white; }
+
+@media (hover: hover) {
+  .gatefold:not(.is-open):hover { transform: translateY(-5px) rotateX(4deg) rotateY(-2deg); }
+  .gate-seal:hover { transform: translate(-50%, -50%) translateZ(28px) scale(1.06); }
+}
+
+@media (max-width: 520px) {
+  .gate-card { padding: 1rem .6rem; }
+  .gate-card h2 { font-size: 2rem; }
+  .gate-card .card-note { font-size: .82rem; }
 }

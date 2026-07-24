@@ -1,10 +1,12 @@
-// Invitación Adrián & Andrea
-// El primer clic abre el sobre. El botón posterior permite repetir la animación.
+// Invitacion Adrián & Andrea
+// Apertura del sobre, acceso al contenido y cuenta atras hasta la ceremonia.
 
 const envelope = document.getElementById("envelope");
+const seal = document.getElementById("seal");
 const scene = document.getElementById("scene");
 const instruction = document.getElementById("instruction");
 const continueButton = document.getElementById("continueButton");
+const details = document.getElementById("details");
 
 let opened = false;
 
@@ -17,32 +19,40 @@ function openEnvelope() {
   envelope.setAttribute("aria-expanded", "true");
   instruction.textContent = "Con mucho cariño";
 
-  // Se muestra cuando la carta ha terminado de salir.
   window.setTimeout(() => {
     continueButton.hidden = false;
   }, 950);
 }
 
-function resetEnvelope() {
-  opened = false;
+function showDetails() {
+  details.hidden = false;
+  details.setAttribute("aria-hidden", "false");
   continueButton.hidden = true;
-  scene.classList.remove("show-card");
-  scene.classList.remove("is-opening");
-  envelope.classList.remove("is-open");
-  envelope.setAttribute("aria-expanded", "false");
-  instruction.textContent = "Pulsa el sello para abrir";
-  envelope.focus();
+
+  window.setTimeout(() => {
+    details.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 100);
 }
 
-envelope.addEventListener("click", openEnvelope);
+function updateCountdown() {
+  // 6 de marzo de 2027, 12:30, horario peninsular de España (CET).
+  const weddingDate = new Date("2027-03-06T12:30:00+01:00");
+  const remaining = Math.max(0, weddingDate.getTime() - Date.now());
 
-continueButton.addEventListener("click", () => {
-  // En esta primera pantalla, el segundo clic permite volver a ver la apertura.
-  if (scene.classList.contains("show-card")) {
-    resetEnvelope();
-    return;
-  }
+  const totalSeconds = Math.floor(remaining / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-  scene.classList.add("show-card");
-  continueButton.textContent = "Repetir apertura";
-});
+  document.getElementById("days").textContent = String(days).padStart(3, "0");
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+}
+
+seal.addEventListener("click", openEnvelope);
+continueButton.addEventListener("click", showDetails);
+
+updateCountdown();
+window.setInterval(updateCountdown, 1000);

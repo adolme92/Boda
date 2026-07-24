@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f0e7">
+  <title>Adrián &amp; Andrea · 6 de marzo de 2027</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="scene" id="scene">
+    <header class="intro" aria-live="polite">
+      <p class="eyebrow">Una invitación para ti</p>
+      <h1>Adrián <span>&amp;</span> Andrea</h1>
+      <p class="instruction" id="instruction">Pulsa el sello para abrir</p>
+    </header>
+
+    <!-- El botón contiene todas las capas del sobre para que sea accesible y fácil de animar. -->
+    <button class="envelope" id="envelope" type="button" aria-expanded="false" aria-label="Abrir la invitación de Adrián y Andrea">
+      <!-- La tarjeta empieza detrás del frontal del sobre, por eso no se ve cerrada. -->
+      <article class="invitation-card" aria-label="Invitación de boda">
+        <p class="card-kicker">Nos casamos</p>
+        <h2>Adrián <span>&amp;</span> Andrea</h2>
+        <div class="card-rule" aria-hidden="true"></div>
+        <p class="card-date">6 de marzo de 2027</p>
+        <p class="card-note">Será un día muy especial<br>y nos encantará compartirlo contigo.</p>
+      </article>
+
+      <span class="envelope-back" aria-hidden="true"></span>
+      <span class="envelope-front" aria-hidden="true"></span>
+      <span class="envelope-flap" aria-hidden="true"></span>
+      <span class="wax-seal" aria-hidden="true">A<span>&amp;</span>A</span>
+    </button>
+
+    <button class="continue-button" id="continueButton" type="button" hidden>
+      Ver invitación
+    </button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
