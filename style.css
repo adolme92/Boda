@@ -341,8 +341,8 @@ h1 span, h2 span {
 /* ---------- Invitación completa ---------- */
 
 .details {
-  --details-photo: url("assets/foto-prueba-playa.jpeg");
-  --details-photo-position: center 62%;
+  --details-photo: url("assets/foto-prueba-mirada.jpeg");
+  --details-photo-position: center 40%;
   position: relative;
   isolation: isolate;
   width: min(100%, 980px);
@@ -472,17 +472,97 @@ h1 span, h2 span {
   flex-direction: column;
 }
 
+.location-photo {
+  position: relative;
+  width: calc(100% + 4rem);
+  height: 118px;
+  margin: -2rem -2rem 1.45rem;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,253,248,.26);
+  background: #1d4036;
+}
+
+.location-photo::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(to bottom, rgba(20,34,29,.12), rgba(20,34,29,.48));
+}
+
+.location-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.76) contrast(.93);
+  transform: scale(1.03);
+}
+
 .location-card::after { position: absolute; right: -2.5rem; bottom: -2.5rem; width: 9rem; height: 9rem; border: 1px solid rgba(178, 138, 89, .18); border-radius: 50%; content: ""; }
 .location-number { display: block; margin-bottom: 2.2rem; color: var(--gold); font: 600 .62rem/1 "Montserrat", sans-serif; letter-spacing: .15em; }
 .location-card .place { margin-bottom: .8rem; color: #fffdf8; font-size: 1.25rem; }
+.location-note { display: block; margin: 1rem 0 0 !important; color: #f2ddbd !important; font: 400 .78rem/1.42 "Cormorant Garamond", Georgia, serif !important; text-shadow: 0 2px 8px rgba(0,0,0,.55); }
+.location-note strong { display: block; margin-bottom: .45rem; color: #f2ddbd; font: 600 .61rem/1 "Montserrat", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.location-note span { color: rgba(255,253,248,.88); }
 .location-card a { position: relative; z-index: 1; align-self: flex-start; margin-top: auto; padding-top: 1.7rem; color: #f2ddbd; font: 600 .62rem/1 "Montserrat", sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
 .location-card a span { padding-left: .25rem; font-size: 1rem; }
+
+.walk-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(300px, 1.2fr);
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  padding: 1.6rem 1.7rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,253,248,.35);
+  border-radius: 5px;
+  background: rgba(20,34,29,.4);
+  box-shadow: 0 12px 24px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.18);
+  text-align: left;
+}
+
+.walk-map::before {
+  position: absolute;
+  right: -6rem;
+  top: -6rem;
+  width: 14rem;
+  height: 14rem;
+  border: 1px solid rgba(178,138,89,.18);
+  border-radius: 50%;
+  content: "";
+}
+
+.walk-map-copy { position: relative; z-index: 1; }
+.walk-map-kicker { margin: 0 0 .55rem; color: #f2ddbd; font: 600 .6rem/1 "Montserrat", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.walk-map h3 { margin: 0; color: #fffdf8; font: 500 clamp(1.65rem, 4vw, 2.05rem)/1 "Cormorant Garamond", Georgia, serif; text-shadow: 0 2px 8px rgba(0,0,0,.45); }
+.walk-map-copy > p:not(.walk-map-kicker) { margin: .7rem 0 1rem; color: rgba(255,253,248,.84); font: 400 1rem/1.35 "Cormorant Garamond", Georgia, serif; }
+.walk-map strong { color: #f2ddbd; font: 600 .65rem/1 "Montserrat", sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.walk-map strong span { padding: 0 .25rem; }
+.walk-map-copy .walk-map-note { margin: 1.1rem 0 0; color: rgba(255,253,248,.86); font: 400 .88rem/1.38 "Cormorant Garamond", Georgia, serif; }
+
+.walk-map-route { position: relative; z-index: 1; display: block; width: 100%; height: auto; overflow: visible; }
+.map-street { fill: none; stroke: rgba(255,253,248,.22); stroke-linecap: round; stroke-width: 2; }
+.street-two { stroke-width: 1.25; }
+.street-three { stroke: rgba(178,138,89,.32); stroke-width: 1.25; }
+.map-route { fill: none; stroke: #f2ddbd; stroke-dasharray: 1 8; stroke-linecap: round; stroke-width: 5; filter: drop-shadow(0 1px 3px rgba(0,0,0,.42)); }
+.map-pin { fill: #f2ddbd; stroke: #1d4036; stroke-width: 4; filter: drop-shadow(0 2px 4px rgba(0,0,0,.42)); }
+.map-pin-end { fill: var(--gold); }
+.map-pin-center { fill: #fffdf8; }
+
+.walk-map-label { position: absolute; z-index: 2; color: rgba(255,253,248,.9); font: 600 .52rem/1 "Montserrat", sans-serif; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.walk-map-label span { display: inline-grid; width: 1.15rem; height: 1.15rem; margin-right: .35rem; place-items: center; border: 1px solid rgba(242,221,189,.72); border-radius: 50%; color: #f2ddbd; font-size: .48rem; }
+.walk-map-label-start { right: 51%; bottom: 1.35rem; }
+.walk-map-label-end { right: 5%; top: 1.4rem; }
 
 .stay-section, .rsvp-section { max-width: 740px; }
 .stay-section { border-top: 1px solid rgba(255,253,248,.42); }
 .stay-section > p, .rsvp-section > p { max-width: 550px; margin: 1.4rem auto 0; font-size: 1.25rem; }
 
 .rsvp-section { border-top: 1px solid rgba(255,253,248,.42); }
+.rsvp-section .rsvp-deadline { margin-top: 1rem; color: #f2ddbd; font: 600 .63rem/1.4 "Montserrat", sans-serif; letter-spacing: .09em; text-transform: uppercase; }
 .rsvp-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 2rem; }
 .rsvp-actions a { padding: 1rem 1.35rem; border: 1px solid #f2ddbd; border-radius: 999px; color: #fffdf8; font: 600 .69rem/1 "Montserrat", sans-serif; letter-spacing: .12em; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
 .rsvp-actions a:hover { color: #2f4e41; background: #f2ddbd; transform: translateY(-2px); }
@@ -566,12 +646,17 @@ h1 span, h2 span {
   .timeline li { grid-template-columns: 3.3rem 1fr; gap: 1.5rem; }
   .timeline time::after { right: -1.2rem; }
   .location-grid { grid-template-columns: 1fr; }
+  .location-photo { height: 145px; }
+  .walk-map { grid-template-columns: 1fr; gap: .65rem; padding: 1.35rem 1.15rem 1.2rem; }
+  .walk-map-route { width: calc(100% + .35rem); margin-left: -.18rem; }
+  .walk-map-label-start { right: 52%; bottom: 1rem; }
+  .walk-map-label-end { right: 3%; top: auto; bottom: 4.2rem; }
 }
 
 @media (min-aspect-ratio: 1/1) {
   .details {
     --details-photo: url("assets/foto-prueba-mirada.jpeg");
-    --details-photo-position: center center;
+    --details-photo-position: center 27%;
   }
 }
 
@@ -695,6 +780,8 @@ h1 span, h2 span {
 
 .gate-door-left {
   left: 0;
+  /* Evita una junta clara de un píxel entre ambas puertas en algunos móviles. */
+  width: calc(50% + 1px);
   border-radius: 10px 0 0 10px;
   transform-origin: left center;
 }
@@ -715,6 +802,8 @@ h1 span, h2 span {
 
 .gate-door-right {
   right: 0;
+  /* Las dos hojas se solapan ligeramente cuando el sobre está cerrado. */
+  width: calc(50% + 1px);
   border-radius: 0 10px 10px 0;
   transform-origin: right center;
 }
